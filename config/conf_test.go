@@ -79,9 +79,5 @@ func newAppConf() *Conf {
 			Password: "",
 			DB:       0,
 		},
-		Api: Api{
-			Rapidash: "https://rapidash.localhost",
-			Ponyta:   "https://ponyta.localhost",
-		},
 	}
 }

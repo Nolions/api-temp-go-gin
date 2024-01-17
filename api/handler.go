@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"strings"
@@ -15,11 +16,11 @@ import (
 )
 
 type Handler struct {
-	CachePrefix string
-	rep         repository.Repository
+	Ctx context.Context
+	Rep repository.Repository
 }
 
-func newHandler(cachePrefix string, appConf config.App, configApi config.Api, redisConf redis.Config, dbConf db.Config) Handler {
+func newHandler(ctx context.Context, cachePrefix string, appConf config.App, redisConf redis.Config, dbConf db.Config) Handler {
 	r, err := redis.New(redisConf)
 	if err != nil {
 		log.Fatal().Msgf("Failed to new redis: [%v]", err)
@@ -37,7 +38,8 @@ func newHandler(cachePrefix string, appConf config.App, configApi config.Api, re
 	rep := repository.New(d, r, cachePrefix)
 
 	return Handler{
-		rep: rep,
+		Ctx: ctx,
+		Rep: rep,
 	}
 }
 

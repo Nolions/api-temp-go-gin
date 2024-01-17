@@ -14,7 +14,7 @@ require (
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.8.0
 	github.com/tent/hawk-go v0.0.0-20161026210932-d341ea318957
-	gitlab.com/ht-co/wraperr v1.0.1
+	github.com/Nolions/wraperr v1.0.1
 	xorm.io/xorm v1.0.3
 )
 

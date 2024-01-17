@@ -1,8 +1,8 @@
 package httpError
 
 import (
+	"github.com/Nolions/wraperr"
 	"github.com/gin-gonic/gin"
-	"gitlab.com/ht-co/wraperr"
 	"net/http"
 )
 

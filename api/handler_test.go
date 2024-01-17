@@ -13,28 +13,38 @@ import (
 var mockEngine *gin.Engine
 
 func init() {
-	mockEngine = engine("test")
+	//mockEngine = engine("test")
 	//mockEngine.s
 }
 
+var app Handler
+var resp *httptest.ResponseRecorder
+var c *gin.Context
+var e *gin.Engine
+
+func setup() {
+	resp = httptest.NewRecorder()
+	c, _ = gin.CreateTestContext(resp)
+	e = engine("")
+	app = Handler{Ctx: c}
+}
+
 func TestPageNotFount(t *testing.T) {
-	w := httptest.NewRecorder()
+	setup()
 	req, _ := http.NewRequest("GET", "/test", nil)
+	e.ServeHTTP(resp, req)
 
-	mockEngine.ServeHTTP(w, req)
-
-	httpError.ErrHandler(func(c *gin.Context) error {
-		return httpError.ErrPageNotFount
-	})
+	//httpError.ErrHandler(func(c *gin.Context) error {
+	//	return httpError.ErrPageNotFount
+	//})
 
 	str, _ := json.Marshal(httpError.ErrorResp{
 		Code:    4040,
 		Message: http.StatusText(http.StatusNotFound),
 	})
 
-	assert.Equal(t, http.StatusNotFound, w.Code)
-	assert.Contains(t, string(str), w.Body.String())
-
+	assert.Equal(t, http.StatusNotFound, resp.Code)
+	assert.Contains(t, string(str), resp.Body.String())
 }
 
 func TestMethodNoAllow(t *testing.T) {

@@ -34,7 +34,3 @@ redis:
   address: localhost:6379
   password: ""
   db: 0
-
-api:
-  rapidash: https://rapidash.localhost
-  ponyta: https://ponyta.localhost

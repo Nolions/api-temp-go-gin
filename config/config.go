@@ -15,11 +15,11 @@ type App struct {
 	WriteTimeout string `mapstructure:"write_timeout"`
 }
 
-type Api struct {
-	Rapidash string `mapstructure:"rapidash"`
-	Ponyta   string `mapstructure:"ponyta"`
-	Lugia    string `mapstructure:"lugia"`
-}
+//type Api struct {
+//	Rapidash string `mapstructure:"rapidash"`
+//	Ponyta   string `mapstructure:"ponyta"`
+//	Lugia    string `mapstructure:"lugia"`
+//}
 
 type Conf struct {
 	Project string       `mapstructure:"project"`
@@ -27,7 +27,6 @@ type Conf struct {
 	Log     log.Config   `mapstructure:"log"`
 	DB      db.Config    `mapstructure:"db"`
 	Redis   redis.Config `mapstructure:"redis"`
-	Api     Api          `mapstructure:"api"`
 }
 
 func Init(files ...string) (conf *Conf, err error) {

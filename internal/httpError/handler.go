@@ -3,9 +3,9 @@ package httpError
 import (
 	"net/http"
 
+	"github.com/Nolions/wraperr"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"gitlab.com/ht-co/wraperr"
 )
 
 type HandlerFunc func(c *gin.Context) error

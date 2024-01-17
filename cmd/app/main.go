@@ -4,8 +4,8 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/Nolions/api-temp-php/api"
 	"github.com/Nolions/api-temp-php/config"
-	"github.com/Nolions/api-temp-php/internal/service/api"
 	"github.com/redpkg/formula/log"
 	"os"
 	"os/signal"
@@ -34,7 +34,7 @@ func main() {
 
 	log.Info().Msgf("(%s) version: %s", conf.Project, version)
 
-	httpSrv := api.New(conf.Project, conf.App, conf.Api, conf.Redis, conf.DB)
+	httpSrv := api.New(context.Background(), conf.Project, conf.App, conf.Redis, conf.DB)
 	httpSrv.Run()
 
 	wg := sync.WaitGroup{}
