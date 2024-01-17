@@ -10,14 +10,7 @@ import (
 	"testing"
 )
 
-var mockEngine *gin.Engine
-
-func init() {
-	//mockEngine = engine("test")
-	//mockEngine.s
-}
-
-var app Handler
+var handler Handler
 var resp *httptest.ResponseRecorder
 var c *gin.Context
 var e *gin.Engine
@@ -26,17 +19,13 @@ func setup() {
 	resp = httptest.NewRecorder()
 	c, _ = gin.CreateTestContext(resp)
 	e = engine("")
-	app = Handler{Ctx: c}
+	handler = Handler{Ctx: c}
 }
 
 func TestPageNotFount(t *testing.T) {
 	setup()
 	req, _ := http.NewRequest("GET", "/test", nil)
 	e.ServeHTTP(resp, req)
-
-	//httpError.ErrHandler(func(c *gin.Context) error {
-	//	return httpError.ErrPageNotFount
-	//})
 
 	str, _ := json.Marshal(httpError.ErrorResp{
 		Code:    4040,
@@ -48,38 +37,40 @@ func TestPageNotFount(t *testing.T) {
 }
 
 func TestMethodNoAllow(t *testing.T) {
-	mockEngine.GET("/test", httpError.ErrHandler(func(c *gin.Context) error {
+	setup()
+	e.GET("/test", httpError.ErrHandler(func(c *gin.Context) error {
 		return httpError.ErrMethodNoAllow
 	}))
 
-	w := httptest.NewRecorder()
-	req, _ := http.NewRequest("POST", "/test", nil)
+	req, _ := http.NewRequest(http.MethodPost, "/test", nil)
 
-	mockEngine.ServeHTTP(w, req)
+	e.ServeHTTP(resp, req)
 
 	str, _ := json.Marshal(httpError.ErrorResp{
 		Code:    4051,
 		Message: http.StatusText(http.StatusMethodNotAllowed),
 	})
 
-	assert.Equal(t, http.StatusMethodNotAllowed, w.Code)
-	assert.Contains(t, string(str), w.Body.String())
+	assert.Equal(t, http.StatusMethodNotAllowed, resp.Code)
+	assert.Contains(t, string(str), resp.Body.String())
 }
 
 func TestHealthz(t *testing.T) {
-	h := Handler{}
-	mockEngine.GET("/healthz", h.healthz)
+	setup()
 
-	w := httptest.NewRecorder()
-	r, _ := http.NewRequest("GET", "/healthz", nil)
-	mockEngine.ServeHTTP(w, r)
+	e.GET("/healthz", handler.healthz)
 
-	str, _ := json.Marshal(struct {
+	req, _ := http.NewRequest(http.MethodGet, "/healthz", nil)
+	e.ServeHTTP(resp, req)
+
+	actually := struct {
 		Status string `json:"status"`
 	}{
 		Status: "ok",
-	})
+	}
 
-	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Contains(t, string(str), w.Body.String())
+	b, _ := json.Marshal(actually)
+
+	assert.Equal(t, http.StatusOK, resp.Code)
+	assert.Equal(t, string(b), resp.Body.String())
 }
